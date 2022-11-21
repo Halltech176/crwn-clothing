@@ -6,14 +6,14 @@ const Navigation = () => {
   return (
     <Fragment>
       <div className="navigation">
-        <Link className="Logo-container" to="/">
+        <Link className="logo-container" to="/">
           <Logo className="logo" />
         </Link>
         <div className="nav-links-container">
           <Link className="nav-link" to="/shop">
             SHOP
           </Link>
-          <Link className="nav-link" to="/signin">
+          <Link className="nav-link" to="/auth">
             SIGNIN
           </Link>
         </div>

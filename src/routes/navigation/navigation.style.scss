@@ -3,7 +3,9 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 25px;
+  padding: 2rem;
 
   .logo-container {
     height: 100%;
@@ -17,6 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    padding-right: 3rem;
 
     .nav-link {
       padding: 10px 15px;
