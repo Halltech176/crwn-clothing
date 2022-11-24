@@ -7,9 +7,10 @@ import {
 } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../Button/Button.component";
+
 import "./sign-in.style.scss";
 
-const defaultFormFields = -{
+const defaultFormFields = {
   email: "",
   password: "",
 };
@@ -22,7 +23,6 @@ const SignInForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  console.log(formFields);
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
@@ -34,11 +34,8 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      const response = await signInAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      console.log(response);
+      const user = await signInAuthUserWithEmailAndPassword(email, password);
+
       resetFormFields();
     } catch (err) {
       switch (err.code) {
@@ -47,6 +44,9 @@ const SignInForm = () => {
           break;
         case "auth/user-not-found":
           alert("No user asscociated with this email");
+          break;
+        case "auth/network-request-failed":
+          alert("Bad Network");
           break;
         default:
           console.log(err);
