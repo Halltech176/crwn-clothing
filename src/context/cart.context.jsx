@@ -1,12 +1,11 @@
 import { createContext, useState, useEffect } from "react";
 
+// Add Cart item function
 const addCartItem = (cartItems, productToAdd) => {
   // find if the cartItems contains productsToAdd
   const existingCartItem = cartItems.find(
     (cartItem) => cartItem.id === productToAdd.id
   );
-
-  console.log(existingCartItem);
 
   if (existingCartItem) {
     return cartItems.map((cartItem) =>
@@ -18,6 +17,8 @@ const addCartItem = (cartItems, productToAdd) => {
   //   return new array with modified cart items
   return [...cartItems, { ...productToAdd, quantity: 1 }];
 };
+
+// Increase Item Quantity function
 
 const increaseItemQuantity = (cartItems, productToIncrease) => {
   const existingCartItem = cartItems.find(
@@ -34,6 +35,8 @@ const increaseItemQuantity = (cartItems, productToIncrease) => {
     );
   }
 };
+
+// Decrease Item quantity function
 
 const decreaseItemQuantity = (cartItems, productToDecrease) => {
   const existingCartItem = cartItems.find(
@@ -57,15 +60,19 @@ const decreaseItemQuantity = (cartItems, productToDecrease) => {
   }
 };
 
+// Remove cart item completly
+
 const clearCartItem = (cartItems, cartItemToClear) =>
   cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id);
 
+// Cart context object
 export const CartContext = createContext({
   isCartOpen: false,
-  setIsCartOpen: () => {},
-  cartItems: [],
-  addItemToCart: () => {},
   cartCount: 0,
+  cartTotal: 0,
+  cartItems: [],
+  setIsCartOpen: () => {},
+  addItemToCart: () => {},
   increaseQuantity: () => {},
   decreaseQuantity: () => {},
   clearItem: () => {},
@@ -75,6 +82,7 @@ export const CartProvider = ({ children }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+  const [cartTotal, setCartTotal] = useState(0);
 
   useEffect(() => {
     const newCartCount = cartItems.reduce(
@@ -82,6 +90,27 @@ export const CartProvider = ({ children }) => {
       0
     );
     setCartCount(newCartCount);
+    const totals = cartItems.map((data, index) => {
+      return data.price * data.quantity;
+    });
+    if (totals.length) {
+      const itemTotals = totals?.reduce((acc, curr) => acc + curr);
+      return setCartTotal(itemTotals);
+    } else {
+      return setCartTotal(0);
+    }
+  }, [cartItems]);
+
+  useEffect(() => {
+    const totals = cartItems.map((data, index) => {
+      return data.price * data.quantity;
+    });
+    if (totals.length) {
+      const itemTotals = totals?.reduce((acc, curr) => acc + curr);
+      return setCartTotal(itemTotals);
+    } else {
+      return setCartTotal(0);
+    }
   }, [cartItems]);
 
   const addItemToCart = (productToAdd) => {
@@ -106,6 +135,7 @@ export const CartProvider = ({ children }) => {
     increaseQuantity,
     decreaseQuantity,
     clearItem,
+    cartTotal,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
